@@ -1,0 +1,19 @@
+{
+  "name": "rake-lint-lint",
+  "version": "1.0.0",
+  "description": "lint",
+  "main": "index.js",
+  "scripts": {
+    "release": "babel src --out-dir lib"
+  },
+  "author": "Peter-WF",
+  "license": "ISC",
+  "dependencies": {
+    "babel-eslint": "^4.1.0",
+    "colors": "1.1.2",
+    "csshint": "^0.2.4",
+    "htmlhint": "^0.9.12",
+    "eslint": "^2.2.0",
+    "mixin-deep": "^1.1.3"
+  }
+}
