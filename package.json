@@ -1,9 +1,17 @@
 {
   "name": "rake-lint-lint",
   "version": "1.0.0",
-  "description": "lint",
+  "description": "A lint plugin using eslint and csshint for rake-zbj to validate js/css file.",
   "main": "index.js",
-  "author": "Peter-WF",
+  "author": {
+    "name": "Peter-WF"
+  },
+  "keywords": [
+    "fis",
+    "rake",
+    "eslint",
+    "csshint"
+  ],
   "dependencies": {
     "colors": "1.1.2",
     "csshint": "^0.2.4",

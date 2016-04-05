@@ -1,12 +1,11 @@
 'use strict';
 
 exports.name = 'lint';
-exports.desc = 'scaffold tools. Initialize a rake-zbj project';
+exports.desc = 'A lint plugin using eslint and csshint for rake-zbj to validate js/css file.';
 exports.register = function (commander) {
 
     require('colors');
     var fs = require('fs');
-    var Q = require('q');
     var conf;
 
     var target = [];
@@ -116,7 +115,7 @@ exports.register = function (commander) {
     }
 
     // js lint
-    function jsCheck(pathname, fileContent, defer) {
+    function jsCheck(pathname, fileContent) {
         var CLIEngine = require("eslint").CLIEngine;
         var cli = new CLIEngine(conf);
         var report = cli.executeOnText(fileContent);
@@ -124,19 +123,17 @@ exports.register = function (commander) {
         if (report.errorCount || report.warningCount) {
             var msg = formatter(report.results);
             console.log('%s  %s \n%s', pathname, 'fail!'.red, msg);
-            defer.resolve("finish");
         }
     }
 
     // css lint
-    function cssCheck(pathname, fileContent, defer) {
+    function cssCheck(pathname, fileContent) {
         var cssHint = require('csshint');
         cssHint.checkString(fileContent, conf.rules).then(function (invalidList) {
 
             var resultArr = []; // 结果信息数组
 
             if (!invalidList.length) {
-                defer.resolve(pathname+ " : finish");
                 return;
             }
 
@@ -169,15 +166,13 @@ exports.register = function (commander) {
                 output += (item + '\n');
             });
             console.log(output);
-
-            defer.resolve("finish");
         });
     }
 
-    function run(lintFunction, defer) {
+    function run(lintFunction) {
         getAllFiles("/Users/Peter/Documents/Work/fis-project/fis-lint-test/static", function (pathname, fileContent) {
             //console.log(fileContent);
-            lintFunction(pathname, fileContent, defer);
+            lintFunction(pathname, fileContent);
         });
     }
 
@@ -195,37 +190,18 @@ exports.register = function (commander) {
 
             var options = arguments[arguments.length - 1];
             var lintFunction;
-            var defer = Q.defer();
 
             if (options.js) {
                 // eslint 插件 config
                 conf = fis.config.data.settings.lint.eslint;
                 lintFunction = jsCheck;
-
-                defer.promise.then(function (result) {
-                    console.log("eslint : " + result);
-                    var defer = Q.defer();
-                    if (options.css) {
-                        // csshint 插件 config
-                        conf = fis.config.data.settings.lint.csshint;
-                        lintFunction = cssCheck;
-                        run(lintFunction, defer);
-                    }
-                    return defer.promise;
-                }).then(function (result) {
-                    console.log("csshint : " + result);
-                });
             } else if (options.css) {
                 // csshint 插件 config
                 conf = fis.config.data.settings.lint.csshint;
                 lintFunction = cssCheck;
-
-                defer.promise.then(function (result) {
-                    console.log("csshint : " + result);
-                });
             }
 
-            run(lintFunction, defer);
+            run(lintFunction);
         });
 
 };

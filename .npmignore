@@ -172,8 +172,10 @@ output/**
 /.idea
 .idea
 
-node_modules/**/*
-node_modules/**
-node_modules
+/node_modules/**/*
+/node_modules/**
+/node_modules
 /rake-command-lint/node_modules
+
+/.idea
 
